@@ -6,9 +6,11 @@ int main()
 {
     
     MyList<int> testList;
+    testList.pop_front();
+    testList.pop_back();
     testList.push_back(5);
     testList.push_front(32);
     
     
-    std::cout << "Hello World!\n";
+    
 }
