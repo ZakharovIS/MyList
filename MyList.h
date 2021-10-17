@@ -16,6 +16,11 @@ template <typename T> class MyList {
 		
 public:
 	MyList();
+	MyList(std::initializer_list<T>);
+
+	T begin();
+
+
 	void push_front(const T&);
 	void push_back(const T&);
 	void pop_front();
@@ -42,6 +47,22 @@ template <typename T> MyList<T>::MyList() : size_( 0 ) {
 	tail_.prev_ = &head_;
 
 };
+
+template <typename T> MyList<T>::MyList(std::initializer_list<T> l): size_(0) {
+	
+	head_.next_ = &tail_;
+	tail_.prev_ = &head_;
+
+	for (auto& i : l)
+	{
+		this->push_back(i);
+		++size_;
+	}
+}
+
+template <typename T> T MyList<T>::begin() {
+	return this->head_.next_
+}
 
 template <typename T> void MyList<T>::push_back(const T& t) {
 	
@@ -72,7 +93,7 @@ template <typename T> void MyList<T>::pop_front() {
 		this->head_.next_ = this->head_.next_->next_;
 		this->head_.next_->prev_ = &this->head_;
 		delete tmp;
-		
+		--size_;
 	}
 		
 }
@@ -85,5 +106,6 @@ template <typename T> void MyList<T>::pop_back() {
 		this->tail_.prev_ = this->tail_.prev_->prev_;
 		this->tail_.prev_->next_ = &this->tail_;
 		delete tmp;
+		--size_;
 	}
 }
