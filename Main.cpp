@@ -12,9 +12,9 @@ int main()
     testList.push_front(32);
     
     
-    MyList<float> testList2{ 0.1, 0.3, 0.145, 0.56, 56 };
+    MyList<float> testList2{ 0.1f, 0.3f, 0.145f, 0.56f, 56.f };
     for (auto& i : testList2)
     {
-
+        std::cout << i << " ";
     }
 }
