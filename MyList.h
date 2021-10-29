@@ -12,7 +12,7 @@ template <typename T> class MyList {
 		
 		Node() : prev_(nullptr), next_(nullptr), data_(nullptr) {};
 		explicit Node(const T& t);
-		~Node() { delete data_; };
+		~Node();
 
 		
 	public:
@@ -34,15 +34,39 @@ template <typename T> class MyList {
 
 	};
 
+	class ConstIterator {
+
+	public:
+		ConstIterator(const Node* node) : current_(node) {}
+		ConstIterator& operator++() { current_ = current_->next_; return *this; }
+		ConstIterator operator++(int) { ConstIterator tmp(current_); ++(*this); return tmp; }
+		bool operator!=(const ConstIterator& rhs) const { return current_ != rhs.current_; }
+		const T& operator*() { return *current_->data_; }
+		const T* operator->() { return &(current_->data_); }
+	private:
+		const Node* current_;
+
+	};
+
+private:
+
 		Node head_, tail_;
 		size_t size_;
 		
 public:
+	
+		
 	MyList();
 	MyList(std::initializer_list<T>);
+	~MyList();
 
 	MyList<T>::Iterator begin();
 	MyList<T>::Iterator end();
+	MyList<T>::ConstIterator begin() const;
+	MyList<T>::ConstIterator end() const;
+	MyList<T>::ConstIterator cbegin() const;
+	MyList<T>::ConstIterator cend() const;
+
 
 
 	void push_front(const T&);
@@ -65,19 +89,29 @@ MyList<T>::Node::Node(const T& t) : prev_(nullptr), next_(nullptr) {
 
 };
 
+template <typename T>
+MyList<T>::Node::~Node() {
+	
+	delete data_;
+	if (prev_) { prev_->next_ = this->next_; }
+	if (next_) { next_->prev_ = this->prev_; }
+}
 
 
 
 
 
-template <typename T> MyList<T>::MyList() : size_( 0 ) {
+
+template <typename T> 
+MyList<T>::MyList() : size_( 0 ) {
 
 	head_.next_ = &tail_;
 	tail_.prev_ = &head_;
 
 };
 
-template <typename T> MyList<T>::MyList(std::initializer_list<T> l): size_(0) {
+template <typename T> 
+MyList<T>::MyList(std::initializer_list<T> l): size_(0) {
 	
 	head_.next_ = &tail_;
 	tail_.prev_ = &head_;
@@ -88,9 +122,19 @@ template <typename T> MyList<T>::MyList(std::initializer_list<T> l): size_(0) {
 	}
 }
 
+template <typename T> 
+MyList<T>::~MyList() {
+
+	for (size_t i = 0; i < size_; i++)
+	{
+		delete head_.next_;
+	}
+}
 
 
-template <typename T> void MyList<T>::push_back(const T& t) {
+
+template <typename T> 
+void MyList<T>::push_back(const T& t) {
 	
 		Node* node{ new Node(t) };
 		this->tail_.prev_->next_ = node;
@@ -101,7 +145,8 @@ template <typename T> void MyList<T>::push_back(const T& t) {
 		
 }
 
-template <typename T> void MyList<T>::push_front(const T& t) {
+template <typename T> 
+void MyList<T>::push_front(const T& t) {
 
 	Node* node{ new Node(t) };
 	this->head_.next_->prev_ = node;
@@ -111,7 +156,8 @@ template <typename T> void MyList<T>::push_front(const T& t) {
 	++size_;
 }
 
-template <typename T> void MyList<T>::pop_front() {
+template <typename T> 
+void MyList<T>::pop_front() {
 
 	if (this->head_.next_ != &this->tail_)
 	{
@@ -124,7 +170,8 @@ template <typename T> void MyList<T>::pop_front() {
 		
 }
 
-template <typename T> void MyList<T>::pop_back() {
+template <typename T> 
+void MyList<T>::pop_back() {
 
 	if (this->head_.next_ != &this->tail_)
 	{
@@ -136,12 +183,35 @@ template <typename T> void MyList<T>::pop_back() {
 	}
 }
 
-template <typename T> typename MyList<T>::Iterator MyList<T>::begin() {
+template <typename T> typename 
+MyList<T>::Iterator MyList<T>::begin(){
 	return MyList<T>::Iterator(this->head_.next_);
 }
 
-template <typename T> typename MyList<T>::Iterator MyList<T>::end() {
+template <typename T> typename 
+MyList<T>::Iterator MyList<T>::end(){
 	return MyList<T>::Iterator(&this->tail_);
+}
+
+
+template <typename T> typename 
+MyList<T>::ConstIterator MyList<T>::begin() const {
+	return MyList<T>::ConstIterator(this->head_.next_);
+}
+
+template <typename T> typename 
+MyList<T>::ConstIterator MyList<T>::end() const {
+	return MyList<T>::ConstIterator(&this->tail_);
+}
+
+template<typename T> typename 
+MyList<T>::ConstIterator MyList<T>::cbegin() const{
+	return MyList<T>::ConstIterator(this->head_.next_);
+}
+
+template<typename T> typename 
+MyList<T>::ConstIterator MyList<T>::cend() const {
+	return MyList<T>::ConstIterator(&this->tail_);
 }
 
 template <typename T>
