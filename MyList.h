@@ -29,10 +29,23 @@ template <typename T> class MyList {
 		bool operator!=(const Iterator& rhs) const { return current_ != rhs.current_; }
 		T& operator*() { return *current_->data_; }
 		T* operator->() { return &(current_->data_); }
-	private:
+	//private:
 		Node* current_;
 
 	};
+
+	class ReverseIterator: public Iterator	{
+	public:
+		ReverseIterator(Node* node) : Iterator(node) {};
+		ReverseIterator& operator++() { Iterator::current_ = Iterator::current_->prev_; return* this; }
+		ReverseIterator operator++(int) { ReverseIterator tmp(Iterator::current_); ++(*this); return tmp; }
+
+
+	private:
+
+	};
+
+	
 
 	class ConstIterator {
 
@@ -66,7 +79,8 @@ public:
 	MyList<T>::ConstIterator end() const;
 	MyList<T>::ConstIterator cbegin() const;
 	MyList<T>::ConstIterator cend() const;
-
+	MyList<T>::ReverseIterator rbegin();
+	MyList<T>::ReverseIterator rend();
 
 
 	void push_front(const T&);
@@ -212,6 +226,16 @@ MyList<T>::ConstIterator MyList<T>::cbegin() const{
 template<typename T> typename 
 MyList<T>::ConstIterator MyList<T>::cend() const {
 	return MyList<T>::ConstIterator(&this->tail_);
+}
+
+template <typename T> typename
+MyList<T>::ReverseIterator MyList<T>::rbegin() {
+	return MyList<T>::ReverseIterator(this->tail_.prev_);
+}
+
+template <typename T> typename
+MyList<T>::ReverseIterator MyList<T>::rend() {
+	return MyList<T>::ReverseIterator(&this->head_);
 }
 
 template <typename T>

@@ -26,6 +26,11 @@ int main()
     
     MyList<float> testList2{ 0.1f, 0.3f, 0.145f, 0.56f, 56.f };
     
+    for (auto begin = testList2.rbegin(); begin != testList2.rend(); begin++)
+    {
+        std::cout << *begin << " ";
+    }
+
     for (auto& i : testList2)
     {
         std::cout << i << std::endl;
